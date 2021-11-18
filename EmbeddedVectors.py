@@ -8,6 +8,9 @@ import numpy as np
 
 # Loading the input
 def load_input(path):
+
+    assert Path(path).exists(), 'tweet.pickle missing! which is the input tweet'
+
     file = open(path, 'rb')
     result = pickle.load(file)
     file.close()
