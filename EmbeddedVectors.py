@@ -36,11 +36,11 @@ class EmbeddedVectors:
         return model.load_from_checkpoint(path_w)
 
     @torch.no_grad()
-    def generate_embedding(self, input_frame):
+    def generate_embedding(self, input_frame, vocabsize=100, threshold=0.70):
         self.model.eval()
         corpus_generator = CorpusExtraction(input_frame)
-        vocab_size = 1000
-        threshold = 0.70
+        vocab_size = vocabsize
+        threshold = threshold
 
         # Corpus is a DataFrame
         _, corpus, _ = corpus_generator.return_corpus_with_proportion(vocab_size=vocab_size,
@@ -66,11 +66,14 @@ class EmbeddedVectors:
 
 
 # Driver Code
-frame = load_input(os.path.join(os.curdir, 'tweet.pickle')) # Loading the dataframe
+frame = load_input(os.path.join(os.curdir, 'tweet.pickle'))  # Loading the dataframe
 vec_path = os.path.join(os.curdir, 'vectorizer.pickle')
 model_path = os.path.join(os.curdir, 'model.ckpt')
 model_graph = os.path.join(os.curdir, 'model_graph.pickle')
 vec = EmbeddedVectors(vectorizer_path=vec_path, model_graph_path=model_graph,
                       model_weight_path=model_path)
 
-print(vec.generate_embedding(input_frame=frame))
+# Hyperparameters to set
+vocab_size = 1000
+threshold = 0.70
+print(vec.generate_embedding(input_frame=frame, vocabsize=vocab_size, threshold=threshold))
